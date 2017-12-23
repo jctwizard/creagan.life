@@ -38,7 +38,7 @@ var config = {
     messagingSenderId: "418884958923"
   };
 
-var list = {};
+var list;
 var listParent;
 
 function init()
@@ -47,7 +47,8 @@ function init()
 
   firebase.initializeApp(config);
   firebase.database().ref("list").once("value").then(function(data) {
-    list = data;
+    console.log(data.val());
+    list = data.val();
     displayItems();
   });
 }
