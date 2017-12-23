@@ -7,6 +7,7 @@
 html
 {
   background-color: black;
+  font-size: 2em;
 }
 
 body
@@ -19,6 +20,20 @@ body
 {
   padding-left: 1.5em;
   padding-top: 1em;
+}
+
+#newItem
+{
+  font-family: monospace;
+  color: black;
+  font-size: 1em;
+}
+
+#addItem
+{
+  font-family: monospace;
+  color: black;
+  font-size: 1em;
 }
 
 #title
@@ -45,7 +60,7 @@ body
 
 <div id="inputBar">
   <input id="newItem" type="text" value=""></input>
-  <button onclick="addNewItem()">add</button>
+  <button id="addItem" onclick="addNewItem();">add</button>
 </div>
 
 <div id="subtitle">
@@ -100,7 +115,7 @@ function displayItems()
 
   for (var itemIndex = Object.keys(list).length - 1; itemIndex >= 0; itemIndex--)
   {
-    addItem(list[itemIndex.toString()]);
+    addItem(list[itemIndex.toString()], itemIndex);
   }
 }
 
@@ -111,21 +126,44 @@ function addNewItem()
   var item = document.getElementById("newItem").value;
   document.getElementById("newItem").value = "";
 
-  addItem(item);
-
-  list[(Object.keys(list).length).toString()] = item;
+  list[(Object.keys(list).length).toString()]["item"] = item;
+  list[(Object.keys(list).length).toString()]["scored"] = "false";
 
   firebase.database().ref("list").set(list);
 
   displayItems();
 }
 
-function addItem(item)
+function addItem(item, index)
 {
   var itemElement = document.createElement("li");
-  itemElement.innerHTML = item;
+  itemElement.innerHTML = item["item"];
+  itemElement.id = index.toString();
+  itemElement.setAttribute("onclick", "strikeItem(" + index.toString() + ")");
+
+  if (item["scored"] == "true")
+  {
+    itemElement.style.textDecoration = "line-through";
+  }
 
   listParent.appendChild(itemElement);
+}
+
+function strikeItem(index)
+{
+  console.log("clicked")
+
+  if (list[index.toString()]["scored"] == "false")
+  {
+    list[index.toString()]["scored"] = "true";
+  }
+  else {
+      list[index.toString()]["scored"] = "false";
+  }
+
+  firebase.database().ref("list").set(list);
+
+  displayItems();
 }
 </script>
 </html>
