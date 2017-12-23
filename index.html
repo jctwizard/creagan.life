@@ -56,7 +56,7 @@ function displayItems()
 {
   listParent.innerHTML = "";
 
-  for (var itemIndex = 0; itemIndex < list.length; itemIndex++)
+  for (var itemIndex = 0; itemIndex < Object.keys(list).length; itemIndex++)
   {
     addItem(list[itemIndex.toString()]);
   }
@@ -69,7 +69,7 @@ function addNewItem()
 
   addItem(item);
 
-  list[(list.length).toString()] = item;
+  list[(Object.keys(list).length).toString()] = item;
 
   firebase.database().ref("list").set(list);
 
@@ -79,7 +79,7 @@ function addNewItem()
 function addItem(item)
 {
   var itemElement = document.createElement("div");
-  itemElement.innerHTML = contents;
+  itemElement.innerHTML = item;
 
   listParent.appendChild(itemElement);
 }
