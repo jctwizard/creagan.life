@@ -14,15 +14,46 @@ body
   font-family: monospace;
   color: white;
 }
+
+#inputBar
+{
+  padding-left: 1.5em;
+  padding-top: 1em;
+}
+
+#title
+{
+  font-weight: bold;
+  padding-left: 2em;
+  padding-top: 1em;
+}
+
+#subtitle
+{
+  font-style: italic;
+  text-decoration: underline;
+  padding-left: 2em;
+  padding-top: 1em;
+}
 </style>
 
 <body onload="init()">
 
-<div>
+<div id="title">
+  welome home!
+</div>
+
+<div id="inputBar">
   <input id="newItem" type="text" value=""></input>
   <button onclick="addNewItem()">add</button>
 </div>
-<div id="list"></div>
+
+<div id="subtitle">
+  things to do together
+</div>
+
+<ul id="list"></ul>
+
 </body>
 
 <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
@@ -46,8 +77,18 @@ function init()
   listParent = document.getElementById("list");
 
   firebase.initializeApp(config);
+
+  updateItems();
+
+  setInterval(function()
+  {
+    updateItems();
+  }, 3000);
+}
+
+function updateItems()
+{
   firebase.database().ref("list").once("value").then(function(data) {
-    console.log(data.val());
     list = data.val();
     displayItems();
   });
@@ -57,7 +98,7 @@ function displayItems()
 {
   listParent.innerHTML = "";
 
-  for (var itemIndex = 0; itemIndex < Object.keys(list).length; itemIndex++)
+  for (var itemIndex = Object.keys(list).length - 1; itemIndex >= 0; itemIndex--)
   {
     addItem(list[itemIndex.toString()]);
   }
@@ -65,6 +106,8 @@ function displayItems()
 
 function addNewItem()
 {
+  updateItems();
+
   var item = document.getElementById("newItem").value;
   document.getElementById("newItem").value = "";
 
@@ -79,7 +122,7 @@ function addNewItem()
 
 function addItem(item)
 {
-  var itemElement = document.createElement("div");
+  var itemElement = document.createElement("li");
   itemElement.innerHTML = item;
 
   listParent.appendChild(itemElement);
