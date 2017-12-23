@@ -7,7 +7,7 @@
 html
 {
   background-color: black;
-  font-size: 2em;
+  font-size: 3em;
 }
 
 body
@@ -18,7 +18,7 @@ body
 
 #inputBar
 {
-  padding-left: 1.5em;
+  padding-left: 2em;
   padding-top: 1em;
 }
 
@@ -126,8 +126,9 @@ function addNewItem()
   var item = document.getElementById("newItem").value;
   document.getElementById("newItem").value = "";
 
-  list[(Object.keys(list).length).toString()]["item"] = item;
-  list[(Object.keys(list).length).toString()]["scored"] = "false";
+  list[(Object.keys(list).length).toString()] = {};
+  list[(Object.keys(list).length - 1).toString()]["item"] = item;
+  list[(Object.keys(list).length - 1).toString()]["scored"] = "scored";
 
   firebase.database().ref("list").set(list);
 
