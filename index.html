@@ -1,0 +1,87 @@
+<html>
+<head>
+<title>creagan life</title>
+</head>
+
+<style>
+html
+{
+  background-color: black;
+}
+
+body
+{
+  font-family: monospace;
+  color: white;
+}
+</style>
+
+<body onload="init()">
+
+<div>
+  <input id="newItem" type="text" value=""></input>
+  <button onclick="addNewItem()">add</button>
+</div>
+<div id="list"></div>
+</body>
+
+<script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
+
+<script>
+// Firebase config
+var config = {
+    apiKey: "AIzaSyC1yg4DwTcGN3VkRs6Zs4Ik2b29G6UVR44",
+    authDomain: "creagan-3ec29.firebaseapp.com",
+    databaseURL: "https://creagan-3ec29.firebaseio.com",
+    projectId: "creagan-3ec29",
+    storageBucket: "creagan-3ec29.appspot.com",
+    messagingSenderId: "418884958923"
+  };
+
+var list = {};
+var listParent;
+
+function init()
+{
+  listParent = document.getElementById("list");
+
+  firebase.initializeApp(config);
+  firebase.database().ref("list").once("value").then(function(data) {
+    list = data;
+    displayItems();
+  });
+}
+
+function displayItems()
+{
+  listParent.innerHTML = "";
+
+  for (var itemIndex = 0; itemIndex < list.length; itemIndex++)
+  {
+    addItem(list[itemIndex.toString()]);
+  }
+}
+
+function addNewItem()
+{
+  var item = document.getElementById("newItem").value;
+  document.getElementById("newItem").value = "";
+
+  addItem(item);
+
+  list[(list.length).toString()] = item;
+
+  firebase.database().ref("list").set(list);
+
+  displayItems();
+}
+
+function addItem(item)
+{
+  var itemElement = document.createElement("div");
+  itemElement.innerHTML = contents;
+
+  listParent.appendChild(itemElement);
+}
+</script>
+</html>
